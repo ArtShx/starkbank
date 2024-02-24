@@ -1,0 +1,4 @@
+starkbank_env=sandbox
+api_site=https://ngrok-free.app/
+organization_id=org_id_val
+private_key=/path/to/key
