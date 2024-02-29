@@ -31,3 +31,7 @@ class InvalidEnvironment(_BaseException):
     code = 0xa7
     msg = "Invalid data on Environment."
 
+class ErrorCreatingInvoice(_BaseException):
+    code = 0xa8
+    msg = "Failed to create Invoice."
+

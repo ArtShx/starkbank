@@ -1,12 +1,10 @@
-from typing import List
-from datetime import datetime
 from dataclasses import dataclass
 
 import starkbank
 
 
 from .auth import Authentication
-from .exceptions import InvalidInvoiceCreationgRequest, NotAuthenticated, InvalidUser, InvalidTaxId, InvalidBankAccount, InvalidTransferCreationgRequest
+from .exceptions import InvalidInvoiceCreationgRequest, InvalidUser, InvalidTaxId, InvalidBankAccount, InvalidTransferCreationgRequest
 from .models.bank import BankAccount
 from .utils import get_logger
 
@@ -62,10 +60,21 @@ class TransferCreateRequest:
 class Transfer:
 
     @staticmethod
-    def create(transfer_request: TransferCreateRequest):
-        if not Authentication.is_auth():
-            raise NotAuthenticated()
+    @Authentication.auth_needed
+    def create(transfer_request: TransferCreateRequest) -> bool:
+        """
+        Creates a new Transfer.
 
+        Parameters
+        ----------
+            TransferCreateRequest:
+                Transfer payload necessary information for creating a Transfer.
+
+        Returns
+        -------
+            Bool
+                Boolean indicating whether the transfer was created successfully.
+        """
         if not isinstance(transfer_request, TransferCreateRequest):
             raise InvalidTransferCreationgRequest()
 
@@ -78,6 +87,6 @@ class Transfer:
             account_number=transfer_request.account_number,
             account_type=transfer_request.account_type
         )
-        # TODO: wait for sandbox access
-        # transfers = starkbank.transfer.create([transfer_req])
-        return
+        transfers = starkbank.transfer.create([transfer_req])
+        return transfers[0].status == "created"
+

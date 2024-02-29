@@ -11,6 +11,7 @@ from starkbank_integration.models.user import User
 
 user = Dummy.get_users(1)[0]
 
+@pytest.mark.skip("Not running this on GH actions.")
 def test_create_invoice():
     create_request = [
         InvoiceCreateRequest(

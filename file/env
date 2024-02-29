@@ -1,4 +1,9 @@
 starkbank_env=sandbox
-api_site=https://ngrok-free.app/
-organization_id=org_id_val
+api_site=https://a09d-2804-7f0-b7c0-db5b-e2eb-9894-83f8-ef24.ngrok-free.app/
+organization_id=45678
+id=12345
+access_id=12345
 private_key=/path/to/key
+username=test12345
+host=12345
+

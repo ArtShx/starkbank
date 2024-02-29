@@ -39,7 +39,8 @@ class InvoiceCreateRequest:
 class Invoice:
 
     @staticmethod
-    def create(invoice_request: List[InvoiceCreateRequest]):
+    @Authentication.auth_needed
+    def create(invoice_request: List[InvoiceCreateRequest]) -> List[bool]:
         """
         Creates up to 100 invoices.
 
@@ -56,11 +57,13 @@ class Invoice:
                  A non-negative integer that represents the amount in cents to be invoiced.
                  When the invoice is paid, this parameter is updated with the amount actually
                  paid. Example: 100 (R$1.00) 
+
+        Returns
+        -------
+        List[bool]
+            List of booleans indicating whether the Invoices was created successfully.
         """
 
-        if not Authentication.is_auth():
-            raise NotAuthenticated()
-        
         if not isinstance(invoice_request, list) \
                 or len(invoice_request) < 1 \
                 or not isinstance(invoice_request[0], InvoiceCreateRequest):
@@ -74,9 +77,15 @@ class Invoice:
             )
             for req in invoice_request
         ]
-        return
-        # TODO: wait for sandbox access
-        invoices = starkbank.invoice.create(invoice_request)
-        # TODO: check return
-        return
+        invoices = starkbank.invoice.create(invoice_req)
+        failed = []
+
+        for i, invoice in enumerate(invoices):
+            if invoice.status != "created":
+                failed.append(i)
+                inv_req = invoice_req[i]
+                logger.error(f"Failed to create invoice: {i}\n" +\
+                        f"Name: {inv_req.name}, tax_id: {inv_req.tax_id}, amount: {inv_req.amount}")
+
+        return failed
 

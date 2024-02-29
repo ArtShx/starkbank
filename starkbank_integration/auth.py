@@ -3,11 +3,10 @@ import os
 import starkbank
 
 from .environment import Environment
+from .exceptions import NotAuthenticated
 
 
 class Authentication:
-    env_file = os.environ["env_file"]
-    env = Environment.from_file(env_file)
     
     @classmethod
     def init(cls):
@@ -15,20 +14,27 @@ class Authentication:
             # Already authenticated
             return
 
-        # user = starkbank.Organization(
-        #     environment=cls.env["starkbank_env"],
-        #     id=cls.env["organization_id"],
-        #     private_key=cls.private_key
-        # )
-        # TODO: workaround to fake auth
-        # I don't have access to sandbox for dev yet
-        user = "Something"
+        env_file = os.environ["env_file"]
+        env = Environment.from_file(env_file)
+        user = starkbank.Project(
+            environment=env["starkbank_env"],
+            id=env["access_id"],
+            private_key=env["private_key_content"]
+        )
         starkbank.user = user
         return
  
     @staticmethod
     def is_auth():
         return starkbank.user is not None
+
+    @staticmethod
+    def auth_needed(func):
+        def wrapper(*args, **kwargs):
+            if not Authentication.is_auth():
+                raise NotAuthenticated()
+            return func(*args, **kwargs)
+        return wrapper
 
     @staticmethod
     def reset():

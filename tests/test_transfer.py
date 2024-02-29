@@ -2,8 +2,10 @@ import pytest
 
 from dummy import Dummy
 
-from starkbank_integration.exceptions import InvalidBankAccount, InvalidTaxId
+from starkbank_integration.auth import Authentication
 from starkbank_integration.models.bank import BankAccount
+from starkbank_integration.environment import Environment
+from starkbank_integration.exceptions import InvalidBankAccount, InvalidTaxId
 from starkbank_integration.transfer import TransferCreateRequest, Transfer
 
 
@@ -36,7 +38,7 @@ def test_bank_code_validation():
     for bank_code, expected in sample:
         assert BankAccount._is_valid_bank_code(bank_code) == expected
 
-def test_branch_code_and_acc_number_validation():
+def test_branch_code():
     sample = [
         ["12345678", True],
         ["1234567-8", True],
@@ -60,9 +62,38 @@ def test_branch_code_and_acc_number_validation():
 
 
     for bank_code, expected in sample:
-        assert BankAccount._is_valid_branch_code_or_account_number(bank_code) == expected
+        assert BankAccount._is_valid_branch_code(bank_code) == expected
 
-def test_create_bank_account():
+def test_acc_number_validation():
+    sample = [
+        ["1234567-8", True],
+        ["12345678", False],
+        ["123-4", True],
+        ["1234", False],
+        ["12345678901-2", True],
+        ["123456789012-3", True],
+        ["1-0", True],
+        ["1", False],
+        [123, False],
+        ["AAAAAAAA", False],
+        ["1234567A", False],
+        [12345678, False],
+        ["", False],
+        ["a", False],
+        ["A", False],
+        [True, False],
+        [0, False],
+        [None, False],
+        [[], False],
+        [["a", "b"], False],
+        [{}, False]
+    ]
+
+
+    for bank_code, expected in sample:
+        assert BankAccount._is_valid_account_number(bank_code) == expected, f"Failed on {bank_code}, expected: {expected}"
+
+def test_branch_code_and_acc_number_validation():
     bank = BankAccount(
             user.name,
             user.user_type,
@@ -97,7 +128,9 @@ def test_create_bank_account():
             bank_acc.branch_code, 
             bank_acc.account_number)
 
+@pytest.mark.skip("Not running this on GH actions.")
 def test_transfer_create():
+    Authentication.init()
     transfer_req = TransferCreateRequest(
         user.name,
         user.user_type,
