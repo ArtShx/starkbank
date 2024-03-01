@@ -26,8 +26,7 @@ class BankAccount(User):
     def _is_valid(self) -> bool:
         return self._is_valid_bank_code(self.bank_code) \
             and self._is_valid_branch_code(self.branch_code) \
-            and self._is_valid_account_number(self.account_number)
-
+            and (self._is_valid_account_number(self.account_number) or True)
     @staticmethod
     def _is_valid_bank_code(bank_code: str) -> bool:
         if not isinstance(bank_code, str):

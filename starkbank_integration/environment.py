@@ -51,6 +51,7 @@ class Environment(Singleton):
             env._read_key()
         except InvalidEnvironment:
             ...
+
         env.init = True
         return env
 

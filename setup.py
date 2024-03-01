@@ -1,13 +1,26 @@
-from setuptools import setup
+from setuptools import setup, find_packages
+from starkbank_integration import __version__
+# import os
 
-with open('requirements.txt') as f:
-    required = f.read().splitlines()
+
+# here = os.path.dirname(os.path.abspath(__file__))
+
+# with open('requirements.txt') as f:
+#     required = f.read().splitlines()
+requires = [
+    "starkbank==2.24.0",
+    "google-cloud-datastore"
+]
 
 setup(
     name='starkbank_int',
-    version='0.1',
+    version=__version__,
     description='StarkBank integration',
-    author='Arhtur Miada',
-    packages=['starkbank_integration'],
-    install_requires=required
+    author='Arthur Miada',
+    # packages=['starkbank_integration'],
+    packages=find_packages(),
+    # include_package_data=True,
+    # package_data={"": ["requirements.txt"]},
+    install_requires=requires
 )
+

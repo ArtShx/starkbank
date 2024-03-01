@@ -131,12 +131,23 @@ def test_branch_code_and_acc_number_validation():
 @pytest.mark.skip("Not running this on GH actions.")
 def test_transfer_create():
     Authentication.init()
+    amount = 100
+    starkbank_acc = BankAccount(
+        name="Stak Bank S. A.",
+        user_type="CNPJ",
+        tax_id="20.018.183/0001-80",
+        bank_code="20018183",
+        branch_code="0001",
+        account_number="6341320293482496",
+        account_type="payment"
+    )
     transfer_req = TransferCreateRequest(
-        user.name,
-        user.user_type,
-        user.tax_id, 
-        10,
-        bank_acc.bank_code, 
-        bank_acc.branch_code, 
-        bank_acc.account_number)
-    Transfer.create(transfer_req)
+        starkbank_acc.name,
+        starkbank_acc.user_type,
+        starkbank_acc.tax_id, 
+        amount,
+        starkbank_acc.bank_code, 
+        starkbank_acc.branch_code, 
+        starkbank_acc.account_number)
+    assert Transfer.create(transfer_req)
+

@@ -35,3 +35,6 @@ class ErrorCreatingInvoice(_BaseException):
     code = 0xa8
     msg = "Failed to create Invoice."
 
+class InvalidEntity(_BaseException):
+    code = 0xa9
+    msg = "Invalid Entity"
