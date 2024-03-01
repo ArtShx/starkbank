@@ -76,11 +76,15 @@ def hello_http(request):
 
 def handler(payload):
     """ Transfers the amount received to Starkbank account. """
-    payload = payload["event"]["log"]["invoice"]
-    nominal_amount = payload["nominalAmount"]
-    discount_amount = payload["discountAmount"]
-    fine_amount = payload["fineAmount"]
-    intereset_amount = payload["interestAmount"]
+    payload = payload["event"]["log"]
+    if (payload["type"] != "credited"):
+        return False
+
+    invoice = payload["invoice"]
+    nominal_amount = invoice["nominalAmount"]
+    discount_amount = invoice["discountAmount"]
+    fine_amount = invoice["fineAmount"]
+    intereset_amount = invoice["interestAmount"]
 
     fees_amount = fine_amount + intereset_amount
     final_amount = nominal_amount + discount_amount - fees_amount

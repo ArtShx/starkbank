@@ -1,6 +1,9 @@
 import pytest
 
-from starkbank_integration.db.base import BaseDB
+try:
+    from starkbank_integration.db.base import BaseDB
+except:
+    ...
 
 @pytest.mark.skip("Running only locally")
 def test_db():

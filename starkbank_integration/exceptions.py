@@ -38,3 +38,7 @@ class ErrorCreatingInvoice(_BaseException):
 class InvalidEntity(_BaseException):
     code = 0xa9
     msg = "Invalid Entity"
+
+class ErrorGoogleAuth(_BaseException):
+    code = 0xaa
+    msg = "Failed Authenticating with GCP."

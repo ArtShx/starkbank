@@ -1,7 +1,8 @@
 
 from google.cloud import datastore
+from google.auth.exceptions import DefaultCredentialsError
 
-from ..exceptions import InvalidEntity
+from ..exceptions import ErrorGoogleAuth, InvalidEntity
 
 
 class BaseDB:
@@ -9,7 +10,10 @@ class BaseDB:
     Base class for DB handler. 
     TODO: make it abstract and make implementation for each Entity.
     """
-    client = datastore.Client()
+    try:
+        client = datastore.Client()
+    except DefaultCredentialsError:
+        raise ErrorGoogleAuth
 
     def __init__(self, entity: str) -> None:
         if not isinstance(entity, str) and entity != "":
