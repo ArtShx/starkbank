@@ -1,0 +1,3 @@
+--extra-index-url https://us-central1-python.pkg.dev/starkbank-415623/python-repo/simple/
+starkbank-int==0.3
+functions-framework==3.*
