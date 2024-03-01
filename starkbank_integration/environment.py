@@ -5,15 +5,16 @@ from typing import Union
 from .exceptions import InvalidEnvironment
 from .singleton import Singleton
 
-class Environment(Singleton):
 
+class Environment(Singleton):
     _mandatory_keys = [
         "api_site",
         "access_id",
         "private_key",
         "organization_id",
-        "starkbank_env"
+        "starkbank_env",
     ]
+
     def __init__(self) -> None:
         self.args = {}
         self.init = False
@@ -22,7 +23,7 @@ class Environment(Singleton):
     def from_file(env_file: Union[str, os.PathLike], ignore_err: bool = False):
         """
         Creates a Environment instance from a file.
-        
+
         Parameters
         ----------
             env_file: str | os.PathLike
@@ -58,7 +59,7 @@ class Environment(Singleton):
     @staticmethod
     def from_environment():
         """Creates a Environment instance from a system/user environment variable."""
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def __getitem__(self, name):
         return self.args[name]
@@ -87,10 +88,6 @@ class Environment(Singleton):
 def is_env_valid(env: Environment):
     check = True
     for key in Environment._mandatory_keys:
-        check = check \
-                and key in env \
-                and env[key] != "" \
-                and isinstance(env[key], str)
+        check = check and key in env and env[key] != "" and isinstance(env[key], str)
 
     return check
-

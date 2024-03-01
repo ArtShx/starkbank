@@ -26,11 +26,14 @@ def test_cpf_validation():
         [None, False],
         [[], False],
         [["a", "b"], False],
-        [{}, False]
+        [{}, False],
     ]
 
     for cpf, expected in sample:
-        assert CPFUser._is_valid(cpf) == expected, f"Assertion error: {cpf} != {expected}"
+        assert (
+            CPFUser._is_valid(cpf) == expected
+        ), f"Assertion error: {cpf} != {expected}"
+
 
 def test_cnpj_validation():
     sample = [
@@ -44,16 +47,20 @@ def test_cnpj_validation():
         ["", False],
         ["1", False],
         ["a", False],
-        ["A", False], [True, False],
+        ["A", False],
+        [True, False],
         [0, False],
         [None, False],
         [[], False],
         [["a", "b"], False],
-        [{}, False]
+        [{}, False],
     ]
 
     for cnpf, expected in sample:
-        assert CNPJUser._is_valid(cnpf) == expected, f"Assertion error: {cnpf} != {expected}"
+        assert (
+            CNPJUser._is_valid(cnpf) == expected
+        ), f"Assertion error: {cnpf} != {expected}"
+
 
 def test_cpf_creations():
     valid_cpf = "123.456.789-00"
@@ -64,6 +71,7 @@ def test_cpf_creations():
     with pytest.raises(InvalidTaxId):
         CPFUser(invalid_cpf)
 
+
 def test_cnpj_creations():
     valid_cnpj = "20.018.183/0001-80"
     user = CNPJUser(valid_cnpj)  # should give no exceptions
@@ -72,6 +80,7 @@ def test_cnpj_creations():
     invalid_cnpj = "0"
     with pytest.raises(InvalidTaxId):
         CPFUser(invalid_cnpj)
+
 
 def test_user_creation():
     # Creating CNPJ
@@ -91,4 +100,3 @@ def test_user_creation():
     # Creating invalid user
     with pytest.raises(InvalidTaxId):
         User("John", "CPF", cnpj)
-

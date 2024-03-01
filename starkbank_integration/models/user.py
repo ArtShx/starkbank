@@ -2,15 +2,17 @@ from abc import ABC, abstractmethod
 import re
 
 from ..exceptions import InvalidTaxId, InvalidUser
-from ..utils import contains_only_numbers, get_logger
+from ..utils import get_logger
 
 
 logger = get_logger()
+
 
 class UserType(ABC):
     """
     Abstract base class for UserType (CPF and CNPJ)
     """
+
     def __init__(self, val: str):
         if not self._is_valid(val):
             raise InvalidTaxId
@@ -97,5 +99,3 @@ class User:
     @property
     def tax_id(self) -> str:
         return self._tax_id
-
-

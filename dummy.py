@@ -35,7 +35,7 @@ assert len(bank_data["account_numbers"]) > 0
 
 class Dummy:
     """Dummy class for generating dummy/fake/random data."""
-    
+
     @staticmethod
     def get_users(n: int) -> List[User]:
         """Returns `n` users."""
@@ -60,7 +60,8 @@ class Dummy:
             bank_code = random.choice(bank_data["bank_codes"])
             branch_code = random.choice(bank_data["branch_codes"])
             account_numbers = random.choice(bank_data["account_numbers"])
-            user = BankAccount(name, "CPF", tax_id, bank_code, branch_code, account_numbers)
+            user = BankAccount(
+                name, "CPF", tax_id, bank_code, branch_code, account_numbers
+            )
             out.append(user)
         return out
-

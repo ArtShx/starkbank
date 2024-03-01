@@ -4,13 +4,13 @@ from dummy import Dummy
 
 from starkbank_integration.auth import Authentication
 from starkbank_integration.models.bank import BankAccount
-from starkbank_integration.environment import Environment
 from starkbank_integration.exceptions import InvalidBankAccount, InvalidTaxId
 from starkbank_integration.transfer import TransferCreateRequest, Transfer
 
 
 user = Dummy.get_users(1)[0]
 bank_acc = Dummy.get_bank_accounts(1)[0]
+
 
 def test_bank_code_validation():
     sample = [
@@ -31,12 +31,12 @@ def test_bank_code_validation():
         [None, False],
         [[], False],
         [["a", "b"], False],
-        [{}, False]
+        [{}, False],
     ]
-
 
     for bank_code, expected in sample:
         assert BankAccount._is_valid_bank_code(bank_code) == expected
+
 
 def test_branch_code():
     sample = [
@@ -57,12 +57,12 @@ def test_branch_code():
         [None, False],
         [[], False],
         [["a", "b"], False],
-        [{}, False]
+        [{}, False],
     ]
-
 
     for bank_code, expected in sample:
         assert BankAccount._is_valid_branch_code(bank_code) == expected
+
 
 def test_acc_number_validation():
     sample = [
@@ -86,21 +86,24 @@ def test_acc_number_validation():
         [None, False],
         [[], False],
         [["a", "b"], False],
-        [{}, False]
+        [{}, False],
     ]
 
-
     for bank_code, expected in sample:
-        assert BankAccount._is_valid_account_number(bank_code) == expected, f"Failed on {bank_code}, expected: {expected}"
+        assert (
+            BankAccount._is_valid_account_number(bank_code) == expected
+        ), f"Failed on {bank_code}, expected: {expected}"
+
 
 def test_branch_code_and_acc_number_validation():
     bank = BankAccount(
-            user.name,
-            user.user_type,
-            user.tax_id, 
-            bank_acc.bank_code, 
-            bank_acc.branch_code, 
-            bank_acc.account_number)
+        user.name,
+        user.user_type,
+        user.tax_id,
+        bank_acc.bank_code,
+        bank_acc.branch_code,
+        bank_acc.account_number,
+    )
 
     # properties should be accessible
     assert bank.name == user.name
@@ -114,19 +117,22 @@ def test_branch_code_and_acc_number_validation():
         BankAccount(
             user.name,
             user.user_type,
-            user.tax_id, 
-            "Invalid", 
-            bank_acc.branch_code, 
-            bank_acc.account_number)
-    
+            user.tax_id,
+            "Invalid",
+            bank_acc.branch_code,
+            bank_acc.account_number,
+        )
+
     with pytest.raises(InvalidTaxId):
         BankAccount(
             user.name,
             user.user_type,
-            "Invalid", 
-            bank_acc.bank_code, 
-            bank_acc.branch_code, 
-            bank_acc.account_number)
+            "Invalid",
+            bank_acc.bank_code,
+            bank_acc.branch_code,
+            bank_acc.account_number,
+        )
+
 
 @pytest.mark.skip("Not running this on GH actions.")
 def test_transfer_create():
@@ -139,15 +145,15 @@ def test_transfer_create():
         bank_code="20018183",
         branch_code="0001",
         account_number="6341320293482496",
-        account_type="payment"
+        account_type="payment",
     )
     transfer_req = TransferCreateRequest(
         starkbank_acc.name,
         starkbank_acc.user_type,
-        starkbank_acc.tax_id, 
+        starkbank_acc.tax_id,
         amount,
-        starkbank_acc.bank_code, 
-        starkbank_acc.branch_code, 
-        starkbank_acc.account_number)
+        starkbank_acc.bank_code,
+        starkbank_acc.branch_code,
+        starkbank_acc.account_number,
+    )
     assert Transfer.create(transfer_req)
-

@@ -4,7 +4,13 @@ import starkbank
 
 
 from .auth import Authentication
-from .exceptions import InvalidInvoiceCreationgRequest, InvalidUser, InvalidTaxId, InvalidBankAccount, InvalidTransferCreationgRequest
+from .exceptions import (
+    InvalidInvoiceCreationgRequest,
+    InvalidUser,
+    InvalidTaxId,
+    InvalidBankAccount,
+    InvalidTransferCreationgRequest,
+)
 from .models.bank import BankAccount
 from .utils import get_logger
 
@@ -23,25 +29,27 @@ class TransferCreateRequest:
     branch_code: str
     account_number: str
 
-    def __init__(self, 
-            name: str,
-            user_type: str, 
-            tax_id: str, 
-            amount: int,
-            bank_code: str,
-            branch_code: str,
-            account_number: str,
-            account_type: str = "checking"):
-
+    def __init__(
+        self,
+        name: str,
+        user_type: str,
+        tax_id: str,
+        amount: int,
+        bank_code: str,
+        branch_code: str,
+        account_number: str,
+        account_type: str = "checking",
+    ):
         try:
             bank_acc = BankAccount(
                 name,
-                user_type, 
-                tax_id, 
-                bank_code, 
-                branch_code, 
+                user_type,
+                tax_id,
+                bank_code,
+                branch_code,
                 account_number,
-                account_type=account_type)
+                account_type=account_type,
+            )
         except (InvalidUser, InvalidBankAccount, InvalidTaxId):
             raise InvalidInvoiceCreationgRequest
         if amount < 0 or not isinstance(amount, int) or isinstance(amount, bool):
@@ -58,7 +66,6 @@ class TransferCreateRequest:
 
 
 class Transfer:
-
     @staticmethod
     @Authentication.auth_needed
     def create(transfer_request: TransferCreateRequest) -> bool:
@@ -85,8 +92,7 @@ class Transfer:
             bank_code=transfer_request.bank_code,
             branch_code=transfer_request.branch_code,
             account_number=transfer_request.account_number,
-            account_type=transfer_request.account_type
+            account_type=transfer_request.account_type,
         )
         transfers = starkbank.transfer.create([transfer_req])
         return transfers[0].status == "created"
-

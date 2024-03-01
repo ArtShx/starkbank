@@ -1,4 +1,3 @@
-
 from google.cloud import datastore
 from google.auth.exceptions import DefaultCredentialsError
 
@@ -7,9 +6,10 @@ from ..exceptions import ErrorGoogleAuth, InvalidEntity
 
 class BaseDB:
     """
-    Base class for DB handler. 
+    Base class for DB handler.
     TODO: make it abstract and make implementation for each Entity.
     """
+
     try:
         client = datastore.Client()
     except DefaultCredentialsError:
@@ -43,7 +43,7 @@ class BaseDB:
         return data
 
     def get_all(self, limit=100) -> list:
-        """ Returns all entities from this kind up to `limit` """
+        """Returns all entities from this kind up to `limit`"""
         query = self.client.query(kind=self._entity)
         return [self._parse_entity(x) for x in query.fetch(limit=limit)]
 
@@ -59,27 +59,3 @@ class BaseDB:
     def delete(self, entity_id: str):
         key = self.client.key(self._entity, entity_id)
         self.client.delete(key)
-
-# Example usage
-if __name__ == "__main__":
-    breakpoint()
-
-    entity = "User"
-
-    # Create an entity
-    entity_key = create_entity(entity, {"name": "John", "tax_id": "428.744.841-30", "user_type": "CPF"})
-
-    # Read the entity
-    task = read_entity(entity, entity_key.id_or_name)
-    print(task)
-
-    # Update the entity
-    update_entity(entity, entity_key.id_or_name, {"name": "Johna"})
-
-    # Read the updated entity
-    updated_task = read_entity(entity, entity_key.id_or_name)
-    print(updated_task)
-
-    # Delete the entity
-    delete_entity(entity, entity_key.id_or_name)
-

@@ -23,13 +23,12 @@ def entrypoint(request):
         Response object using `make_response`
         <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
     """
-    request_json = request.get_json(silent=True)
     success = handler()
-    return f'Success {success}!'
+    return f"Success {success}!"
 
 
 def handler():
-    """ Creates 8-12 invoices to random peoples. """
+    """Creates 8-12 invoices to random peoples."""
     Authentication.init()
     nb_users_to_send = randint(8, 12)
 
@@ -37,7 +36,9 @@ def handler():
     user_data = db.get_all(limit=nb_users_to_send)
 
     inv_req = [
-        InvoiceCreateRequest(user["name"], user["user_type"], user["tax_id"], amount=randint(1, 1000))
+        InvoiceCreateRequest(
+            user["name"], user["user_type"], user["tax_id"], amount=randint(1, 1000)
+        )
         for user in user_data
     ]
     try:
@@ -49,4 +50,3 @@ def handler():
 
 if __name__ == "__main__":
     handler()
-

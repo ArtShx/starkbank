@@ -12,7 +12,8 @@ Payload example
             "id": "6417929088270336",
             "invoice": {
                 "amount": 12345,
-                "brcode": "00020101021226890014br.gov.bcb.pix2567brcode-h.sandbox.starkinfra.com/v2/ea937a2753cb47579b655b6a5cc2a5355204000053039865802BR5925Stark Bank S.A. - Institu6009Sao Paulo62070503***630482E8",
+                "brcode": "00020101021226890014br.gov.bcb.pix2567brcode-h.sandbox.starkinfra.com/v2/
+ea937a2753cb47579b655b6a5cc2a5355204000053039865802BR5925Stark Bank S.A. - Institu6009Sao Paulo62070503***630482E8",
                 "created": "2024-02-29T04:51:21.066899+00:00",
                 "descriptions": [],
                 "discountAmount": 0,
@@ -75,9 +76,9 @@ def hello_http(request):
 
 
 def handler(payload):
-    """ Transfers the amount received to Starkbank account. """
+    """Transfers the amount received to Starkbank account."""
     payload = payload["event"]["log"]
-    if (payload["type"] != "credited"):
+    if payload["type"] != "credited":
         return False
 
     invoice = payload["invoice"]
@@ -97,16 +98,17 @@ def handler(payload):
         bank_code="20018183",
         branch_code="0001",
         account_number="6341320293482496",
-        account_type="payment"
+        account_type="payment",
     )
     transfer_req = TransferCreateRequest(
         starkbank_acc.name,
         starkbank_acc.user_type,
-        starkbank_acc.tax_id, 
+        starkbank_acc.tax_id,
         final_amount,
-        starkbank_acc.bank_code, 
-        starkbank_acc.branch_code, 
-        starkbank_acc.account_number)
+        starkbank_acc.bank_code,
+        starkbank_acc.branch_code,
+        starkbank_acc.account_number,
+    )
     try:
         Transfer.create(transfer_req)
         return True
@@ -115,7 +117,6 @@ def handler(payload):
 
 
 if __name__ == "__main__":
-
     payload = {
         "event": {
             "created": "2024-02-29T05:00:12.051456+00:00",
@@ -126,7 +127,9 @@ if __name__ == "__main__":
                 "id": "6417929088270336",
                 "invoice": {
                     "amount": 12345,
-                    "brcode": "00020101021226890014br.gov.bcb.pix2567brcode-h.sandbox.starkinfra.com/v2/ea937a2753cb47579b655b6a5cc2a5355204000053039865802BR5925Stark Bank S.A. - Institu6009Sao Paulo62070503***630482E8",
+                    "brcode": "00020101021226890014br.gov.bcb.pix2567brcode-h.sandbox.starkinfra.com/v2/"
+                    + "ea937a2753cb47579b655b6a5cc2a5355204000053039865802BR5925Stark Bank S.A. - "
+                    + "Institu6009Sao Paulo62070503***630482E8",
                     "created": "2024-02-29T04:51:21.066899+00:00",
                     "descriptions": [],
                     "discountAmount": 0,
@@ -146,21 +149,16 @@ if __name__ == "__main__":
                     "rules": [],
                     "splits": [],
                     "status": "paid",
-                    "tags": [
-                        "e34471744202402290500ivhivwiq2kp"
-                    ],
+                    "tags": ["e34471744202402290500ivhivwiq2kp"],
                     "taxId": "012.345.678-90",
-                    "transactionIds": [
-                        "42243899797196738924666148216171"
-                    ],
-                    "updated": "2024-02-29T05:00:11.794335+00:00"
+                    "transactionIds": ["42243899797196738924666148216171"],
+                    "updated": "2024-02-29T05:00:11.794335+00:00",
                 },
-                "type": "credited"
+                "type": "credited",
             },
             "subscription": "invoice",
-            "workspaceId": "6010044957065216"
+            "workspaceId": "6010044957065216",
         }
     }
 
     # handler()
-

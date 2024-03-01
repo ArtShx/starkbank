@@ -7,7 +7,6 @@ from .exceptions import NotAuthenticated
 
 
 class Authentication:
-    
     @classmethod
     def init(cls):
         if starkbank.user is not None:
@@ -19,11 +18,11 @@ class Authentication:
         user = starkbank.Project(
             environment=env["starkbank_env"],
             id=env["access_id"],
-            private_key=env["private_key_content"]
+            private_key=env["private_key_content"],
         )
         starkbank.user = user
         return
- 
+
     @staticmethod
     def is_auth():
         return starkbank.user is not None
@@ -34,9 +33,9 @@ class Authentication:
             if not Authentication.is_auth():
                 raise NotAuthenticated()
             return func(*args, **kwargs)
+
         return wrapper
 
     @staticmethod
     def reset():
         starkbank.user = None
-

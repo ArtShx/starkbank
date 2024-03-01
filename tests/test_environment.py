@@ -8,8 +8,7 @@ from starkbank_integration.exceptions import InvalidEnvironment
 
 
 def test_env():
-
-    content=b"""
+    content = b"""
 var1=val1
 var2=value2
 # should ignore this line with a comment and the blank line below
@@ -25,8 +24,15 @@ access_id=project/123
         fp.close()
 
         env = Environment.from_file(fp.name)
-        assert env.keys() == ["var1", "var2", "api_site", "private_key",
-                              "starkbank_env", "organization_id", "access_id"]
+        assert env.keys() == [
+            "var1",
+            "var2",
+            "api_site",
+            "private_key",
+            "starkbank_env",
+            "organization_id",
+            "access_id",
+        ]
         assert "var1" in env
         assert env["var2"] == "value2"
         assert env["api_site"] == " http://localhost:1234"
@@ -39,7 +45,7 @@ access_id=project/123
 
 
 def test_missing_mandatory_keys():
-    content=b"""
+    content = b"""
 api_site=http://localhost:1234
 # missing organization_id, private_key, starkbank_env, etc.
 """
@@ -52,4 +58,3 @@ api_site=http://localhost:1234
 
         # Cleaning
         os.remove(fp.name)
-
