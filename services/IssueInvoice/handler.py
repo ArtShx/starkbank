@@ -29,7 +29,6 @@ def entrypoint(request):
         Response object using `make_response`
         <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
     """
-    breakpoint()
     if not should_run():
         disable_scheduler()
     success = handler()
