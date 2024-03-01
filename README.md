@@ -1,19 +1,38 @@
 # StarkBank skill test
-Integração com servidor StarkBank
+Integration with StarkBank server
 
-1: Emissão de boletos (entre 8 a 12) a cada 3 horas para pessoas aleatórias por 24h
-    Imaginar que são boletos reais, para clientes da minha própria empresa e a starkbank é o meu banco
+1. Issuance of boletos (between 8 to 12) every 3 hours to random individuals for 24 hours;
+2. Receive a webhook callback for the credits received (from task 1) and transfer the received amount (subtracting any fees) to the StarkBank account.
 
+## Tools
+- Python 3.10;
+- Flake8 (linter) / Black (formatter);
+- Pytest / coverage;
+- GCP:
+    * Cloud Functions (run microservices);
+    * Cloud Scheduler (schedule microservice executions);
+    * Artifact Registry (python package repository);
+    * Secret Manager (store sensitive files);
 
-2: Receber um callback webhook dos créditos recebidos (da tarefa 1) e transferir o montante recebido (subtraindo eventuais taxas) para a conta da Stark Bank
-
+## Folder Structure
+```
+.
+├── file                    # General files (mock, configuration)
+│   └── keys                # PEM keys
+├── services                # Microservices
+│   ├── IssueInvoice
+│   └── Transfer2Starkbank
+├── starkbank_integration   # Base code to be used by microservices
+│   ├── db                  # Database interaction
+│   └── models              # Entities (business rules)
+└── tests                   # Unit tests
+```
 
 ## TODO
 - [x] Create a package for starkbank api integration;
-- [ ] Create tests for `services/` and finish development of both services -> waiting for `sandbox` access;
-- [ ] Add shell script to setup a cron job;
+- [ ] Create tests for `services/`;
 - [x] Add CI automated tests on commit, run tests and coverage report;
 - [x] Setup a GCP freetier account (maybe use Terraform or other IaC tool?);
 - [ ] Add CD automated deploy on GCP;
-- [ ] Deploy `services` and the `starkbank_integration` package into a cloud provider;
+- [x] Deploy `services` and the `starkbank_integration` package into a cloud provider;
 
