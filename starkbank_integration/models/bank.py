@@ -51,7 +51,7 @@ class BankAccount(User):
     def _is_valid_account_number(code: str) -> bool:
         if not isinstance(code, str):
             return False
-        # The account number must be a sequence of numbers and a "-" before the valdiation digit. 
+        # The account number must be a sequence of numbers and a "-" before the valdiation digit.
         # (ex: 12345-2 or 123456-0)
         # Assuming 16 numbers w/o validation are ok too (not sure)
         pattern = "^[0-9]+-[0-9]$|^[0-9]{16}$"
