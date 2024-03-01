@@ -28,7 +28,7 @@ class BankAccount(User):
         return (
             self._is_valid_bank_code(self.bank_code)
             and self._is_valid_branch_code(self.branch_code)
-            and (self._is_valid_account_number(self.account_number) or True)
+            and (self._is_valid_account_number(self.account_number))
         )
 
     @staticmethod
@@ -51,9 +51,10 @@ class BankAccount(User):
     def _is_valid_account_number(code: str) -> bool:
         if not isinstance(code, str):
             return False
-        # The account number must be a sequence of 1 to 12 numbers
-        # followed by a hyphen and another digit (ex: 12345-2 or 123456-0)
-        pattern = "^[0-9]{1,12}-[0-9]$"
+        # The account number must be a sequence of numbers and a "-" before the valdiation digit. 
+        # (ex: 12345-2 or 123456-0)
+        # Assuming 16 numbers w/o validation are ok too (not sure)
+        pattern = "^[0-9]+-[0-9]$|^[0-9]{16}$"
         return bool(re.match(pattern, code))
 
     @property

@@ -87,6 +87,7 @@ def handler(payload):
     fine_amount = invoice["fineAmount"]
     intereset_amount = invoice["interestAmount"]
 
+    # :REVIEW not sure if this is correct
     fees_amount = fine_amount + intereset_amount
     final_amount = nominal_amount + discount_amount - fees_amount
 

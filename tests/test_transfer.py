@@ -72,6 +72,10 @@ def test_acc_number_validation():
         ["1234", False],
         ["12345678901-2", True],
         ["123456789012-3", True],
+        ["123456789012-3", True],
+        # Assuming 16 numbers w/o validation digit are also acceptable even though the docs says otherwise
+        # :REVIEW Starkbank account number does not has validation number
+        ["6341320293482496", True],
         ["1-0", True],
         ["1", False],
         [123, False],
