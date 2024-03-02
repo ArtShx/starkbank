@@ -33,7 +33,8 @@ class Environment(Singleton):
                 Added for ignoring errors on unit tests with mock data.
         """
 
-        assert os.path.isfile(env_file), f"Env file: {env_file} not found."
+        if not os.path.isfile(env_file):
+            raise InvalidEnvironment(f"Env file: {env_file} not found.")
         env = Environment()
         env.args = {}
 
@@ -48,10 +49,7 @@ class Environment(Singleton):
         if not is_env_valid(env) and not ignore_err:
             raise InvalidEnvironment()
 
-        try:
-            env._read_key()
-        except InvalidEnvironment:
-            ...
+        env._read_key()
 
         env.init = True
         return env

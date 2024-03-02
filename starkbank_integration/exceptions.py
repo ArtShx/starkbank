@@ -61,3 +61,8 @@ class ErrorGetInvoice(_BaseException):
 class ErrorGetTransfer(_BaseException):
     code = 0xAC
     msg = "Failed to get Transfer."
+
+
+class ErrorAuthenticating(_BaseException):
+    code = 0xAD
+    msg = "Error while authenticating."

@@ -14,6 +14,39 @@ Integration with StarkBank server
     * Artifact Registry (python package repository);
     * Secret Manager (store sensitive files);
 
+## Setup
+```ssh
+git clone https://github.com/ArtShx/starkbank_int
+cd starkbank_int
+virtualenv venv
+source venv/bin/activate
+
+# Install dependencies
+pip install .
+pip install -r requirements.txt
+pip install -r requirements-dev.txt
+
+# Run tests
+pytest
+```
+
+#### Edit the env file doing the following steps:
+You need to update the `env` file to be able to authenticate with Starkbank API. Follow steps below:
+1. Update the path of your private_key.pem (make sure this the same key that is already registered on Starkbank API)
+`private_key=/path/to/your/key.pem`
+
+2. Update the access_id (Starkbank project id):
+`access_id=...`
+
+3. Create a environment variable to set the path of this env file:
+`export env_file=/path/to/starkbank_int/file/env`
+
+4. Try executing the `HelloWorld`  service by running the following command:
+`functions-framework --target entrypoint --source services/HelloWorld/handler.py`
+
+Open a new terminal and run `curl localhost:8080` 
+
+
 ## Folder Structure
 ```
 .
