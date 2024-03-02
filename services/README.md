@@ -16,6 +16,8 @@ curl localhost:8080 --header 'Content-Type: application/json' \
     --data '{"force": true}' localhost:8080
 ```
 
+This service is also accessible via HTTPS: https://us-central1-starkbank-415623.cloudfunctions.net/InvoiceIssue
+
 ### Transfer2Starkbank
 ```
 functions-framework --target entrypoint --source services/Transfer2Starkbank/handler.py

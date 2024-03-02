@@ -30,7 +30,7 @@ def entrypoint(request):
     success, transfer_id_or_msg = handler(request_json)
     if success:
         logger.debug(f"Made transfer to: {transfer_id_or_msg}")
-    return str(transfer_id_or_msg)
+    return {"success": success, "message": transfer_id_or_msg}
 
 
 def handler(payload) -> Tuple[bool, str]:
