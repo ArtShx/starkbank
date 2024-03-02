@@ -51,3 +51,13 @@ class InvalidEntity(_BaseException):
 class ErrorGoogleAuth(_BaseException):
     code = 0xAA
     msg = "Failed Authenticating with GCP."
+
+
+class ErrorGetInvoice(_BaseException):
+    code = 0xAB
+    msg = "Failed to get Invoice"
+
+
+class ErrorGetTransfer(_BaseException):
+    code = 0xAC
+    msg = "Failed to get Transfer."
