@@ -18,7 +18,7 @@ Integration with StarkBank server
 ```ssh
 git clone https://github.com/ArtShx/starkbank_int
 cd starkbank_int
-virtualenv venv
+virtualenv venv --python=python3.10
 source venv/bin/activate
 
 # Install dependencies
@@ -39,13 +39,12 @@ You need to update the `env` file to be able to authenticate with Starkbank API.
 `access_id=...`
 
 3. Create a environment variable to set the path of this env file:
-`export env_file=/path/to/starkbank_int/file/env`
+`export env_file=${PWD}/file/env`
 
 4. Try executing the `HelloWorld`  service by running the following command:
 `functions-framework --target entrypoint --source services/HelloWorld/handler.py`
 
-Open a new terminal and run `curl localhost:8080` 
-
+Open a new terminal and run `curl localhost:8080`, this should return a json describing the version and if authentication worked.
 
 ## Folder Structure
 ```

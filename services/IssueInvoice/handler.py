@@ -33,9 +33,9 @@ def entrypoint(request):
     forced_execution = payload.get("force", False)
     if not should_run() and not forced_execution:
         disable_scheduler()
-        return "Service are configured to not run now, leaving."
+        return {"msg": "Service are configured to not run now, leaving."}
     success = handler()
-    return str(success)
+    return {"success": success}
 
 
 def should_run() -> bool:

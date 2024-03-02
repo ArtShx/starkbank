@@ -19,12 +19,9 @@ def entrypoint(request):
         Response object using `make_response`
         <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
     """
-    payload = request.get_json()
-    name = payload.get("name", "World")
     success, err = Authentication.test()
     return {
-        "Hello": name,
         "auth_success": success,
         "auth_message": err,
-        "starkbank_integration_version": version
+        "starkbank_integration_version": version,
     }
