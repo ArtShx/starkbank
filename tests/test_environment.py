@@ -7,18 +7,26 @@ from starkbank_integration.environment import Environment
 from starkbank_integration.exceptions import InvalidEnvironment
 
 
+def test_env_does_not_exists():
+    with pytest.raises(InvalidEnvironment):
+        Environment.from_file("/file/does/not/exist")
+
+
 def test_env():
+    my_secret_key = "/tmp/my_secret_key.pem"
     content = b"""
 var1=val1
 var2=value2
 # should ignore this line with a comment and the blank line below
 
 api_site= http://localhost:1234
-private_key=/path/to/key
+private_key=/tmp/my_secret_key.pem
 starkbank_env=sandbox
 organization_id=organization_id
 access_id=project/123
 """
+    with open(my_secret_key, "w") as f:
+        f.write("Secret content")
     with NamedTemporaryFile(delete=False) as fp:
         fp.write(content)
         fp.close()
@@ -32,6 +40,7 @@ access_id=project/123
             "starkbank_env",
             "organization_id",
             "access_id",
+            "private_key_content"
         ]
         assert "var1" in env
         assert env["var2"] == "value2"
@@ -42,6 +51,7 @@ access_id=project/123
 
         # Cleaning
         os.remove(fp.name)
+        os.remove(my_secret_key)
 
 
 def test_missing_mandatory_keys():

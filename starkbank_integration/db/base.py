@@ -12,8 +12,8 @@ class BaseDB:
 
     try:
         client = datastore.Client()
-    except DefaultCredentialsError:
-        raise ErrorGoogleAuth
+    except DefaultCredentialsError as e:
+        raise ErrorGoogleAuth(str(e))
 
     def __init__(self, entity: str) -> None:
         if not isinstance(entity, str) and entity != "":

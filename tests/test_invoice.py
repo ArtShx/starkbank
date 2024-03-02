@@ -41,6 +41,7 @@ def test_create_invoice():
         assert invoice.amount == create_req.amount
 
 
+@pytest.mark.skip("Not running this on GH actions.")
 def test_get():
     id_does_not_exists = "0000000000000000"
     Authentication.init()
