@@ -1,10 +1,16 @@
 import pytest
 
+import starkbank
+
 from dummy import Dummy
 
 from starkbank_integration.auth import Authentication
 from starkbank_integration.models.bank import BankAccount
-from starkbank_integration.exceptions import InvalidBankAccount, InvalidTaxId
+from starkbank_integration.exceptions import (
+    ErrorGetTransfer,
+    InvalidBankAccount,
+    InvalidTaxId,
+)
 from starkbank_integration.transfer import TransferCreateRequest, Transfer
 
 
@@ -72,6 +78,10 @@ def test_acc_number_validation():
         ["1234", False],
         ["12345678901-2", True],
         ["123456789012-3", True],
+        ["123456789012-3", True],
+        # Assuming 16 numbers w/o validation digit are also acceptable even though the docs says otherwise
+        # :REVIEW Starkbank account number does not has validation number
+        ["6341320293482496", True],
         ["1-0", True],
         ["1", False],
         [123, False],
@@ -157,3 +167,18 @@ def test_transfer_create():
         starkbank_acc.account_number,
     )
     assert Transfer.create(transfer_req)
+
+
+@pytest.mark.skip("Not running this on GH actions.")
+def test_transfer_get():
+    Authentication.init()
+    invalid_id = "0000000000000000"
+    with pytest.raises(ErrorGetTransfer):
+        Transfer.get(invalid_id)
+
+    valid_id = "4869103437217792"
+    transfer = Transfer.get(valid_id)
+    assert isinstance(transfer, starkbank.Transfer)
+    assert transfer.amount == 256
+    assert transfer.name == "Stak Bank S. A."
+    assert transfer.status == "success"

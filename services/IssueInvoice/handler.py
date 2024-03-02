@@ -29,10 +29,13 @@ def entrypoint(request):
         Response object using `make_response`
         <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
     """
-    if not should_run():
+    payload = request.get_json()
+    forced_execution = payload.get("force", False)
+    if not should_run() and not forced_execution:
         disable_scheduler()
+        return {"msg": "Service are configured to not run now, leaving."}
     success = handler()
-    return f"Success {success}!"
+    return {"success": success}
 
 
 def should_run() -> bool:

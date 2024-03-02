@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 import starkbank
+from starkbank.error import InputErrors
 
 
 from .auth import Authentication
@@ -10,6 +11,7 @@ from .exceptions import (
     InvalidTaxId,
     InvalidBankAccount,
     InvalidTransferCreationgRequest,
+    ErrorGetTransfer,
 )
 from .models.bank import BankAccount
 from .utils import get_logger
@@ -68,7 +70,7 @@ class TransferCreateRequest:
 class Transfer:
     @staticmethod
     @Authentication.auth_needed
-    def create(transfer_request: TransferCreateRequest) -> bool:
+    def create(transfer_request: TransferCreateRequest) -> starkbank.Transfer:
         """
         Creates a new Transfer.
 
@@ -95,4 +97,12 @@ class Transfer:
             account_type=transfer_request.account_type,
         )
         transfers = starkbank.transfer.create([transfer_req])
-        return transfers[0].status == "created"
+        return transfers[0]
+
+    @staticmethod
+    @Authentication.auth_needed
+    def get(id: str) -> starkbank.Transfer:
+        try:
+            return starkbank.transfer.get(id)
+        except InputErrors as e:
+            raise ErrorGetTransfer(e)

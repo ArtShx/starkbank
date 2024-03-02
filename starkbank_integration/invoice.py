@@ -2,10 +2,11 @@ from typing import List
 from dataclasses import dataclass
 
 import starkbank
+from starkcore.error import InputErrors
 
 
 from .auth import Authentication
-from .exceptions import InvalidInvoiceCreationgRequest, InvalidUser
+from .exceptions import InvalidInvoiceCreationgRequest, InvalidUser, ErrorGetInvoice
 from .models.user import User
 from .utils import get_logger
 
@@ -38,7 +39,7 @@ class InvoiceCreateRequest:
 class Invoice:
     @staticmethod
     @Authentication.auth_needed
-    def create(invoice_request: List[InvoiceCreateRequest]) -> List[bool]:
+    def create(invoice_request: List[InvoiceCreateRequest]) -> List[starkbank.Invoice]:
         """
         Creates up to 100 invoices.
 
@@ -58,8 +59,8 @@ class Invoice:
 
         Returns
         -------
-        List[bool]
-            List of booleans indicating whether the Invoices was created successfully.
+        List[starkbank.Invoice]
+            List of Invoices.
         """
 
         if (
@@ -73,16 +74,12 @@ class Invoice:
             starkbank.Invoice(amount=req.amount, tax_id=req.tax_id, name=req.name)
             for req in invoice_request
         ]
-        invoices = starkbank.invoice.create(invoice_req)
-        failed = []
+        return starkbank.invoice.create(invoice_req)
 
-        for i, invoice in enumerate(invoices):
-            if invoice.status != "created":
-                failed.append(i)
-                inv_req = invoice_req[i]
-                logger.error(
-                    f"Failed to create invoice: {i}\n"
-                    + f"Name: {inv_req.name}, tax_id: {inv_req.tax_id}, amount: {inv_req.amount}"
-                )
-
-        return failed
+    @staticmethod
+    @Authentication.auth_needed
+    def get(id: str) -> starkbank.Invoice:
+        try:
+            return starkbank.invoice.get(id)
+        except InputErrors as e:
+            raise ErrorGetInvoice(str(e))

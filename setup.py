@@ -1,14 +1,17 @@
+import os
 from setuptools import setup, find_packages
 from starkbank_integration import __version__
 
-# import os
 
+try:
+    here = os.path.dirname(os.path.abspath(__file__))
 
-# here = os.path.dirname(os.path.abspath(__file__))
-
-# with open('requirements.txt') as f:
-#     required = f.read().splitlines()
-requires = ["starkbank==2.24.0", "google-cloud-datastore"]
+    with open(os.path.join(here, "requirements.txt")) as f:
+        requires = f.read().splitlines()
+except FileNotFoundError:
+    # When building with `python setup.py sdist`, the requirements file are not included
+    # in the builded file, TODO
+    requires = ["starkbank==2.24.0", "google-cloud-datastore", "functions-framework"]
 
 setup(
     name="starkbank_int",
