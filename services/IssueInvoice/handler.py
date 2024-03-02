@@ -29,8 +29,10 @@ def entrypoint(request):
         Response object using `make_response`
         <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
     """
-    payload = request.get_json()
-    forced_execution = payload.get("force", False)
+    payload = request.get_json(silent=True)
+    forced_execution = False
+    if payload:
+        forced_execution = payload.get("force", False)
     if not should_run() and not forced_execution:
         disable_scheduler()
         return {"msg": "Service are configured to not run now, leaving."}
@@ -75,7 +77,7 @@ def handler():
 
     inv_req = [
         InvoiceCreateRequest(
-            user["name"], user["user_type"], user["tax_id"], amount=randint(1, 1000)
+            user["name"], user["user_type"], user["tax_id"], amount=randint(100, 100000)
         )
         for user in user_data
     ]
