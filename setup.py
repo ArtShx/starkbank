@@ -11,7 +11,12 @@ try:
 except FileNotFoundError:
     # When building with `python setup.py sdist`, the requirements file are not included
     # in the builded file, TODO
-    requires = ["starkbank==2.24.0", "google-cloud-datastore", "functions-framework"]
+    requires = [
+        "starkbank==2.24.0",
+        "google-cloud-datastore",
+        "functions-framework",
+        "google-cloud-scheduler",
+    ]
 
 setup(
     name="starkbank_int",
